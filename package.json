@@ -1,28 +1,46 @@
 {
-  "name": "bayes",
-  "description": "Naive Bayes Classifier for node.js",
+  "name": "naive-bayes",
+  "description": "TypeScript Naive Bayes Classifier for Node and Browser",
   "version": "1.0.0",
-  "author": "Tolga Tezel",
+  "author": "Thomas Champagne",
   "keywords": [
     "naive",
     "bayes",
     "categorize",
     "classify",
-    "classifier"
+    "classifier",
+    "artificial intelligence"
   ],
-  "dependencies": {},
+  "scripts": {
+    "build": "npm run clean && tsc --project tsconfig.lib.json",
+    "watch": "npm run build -- --watch",
+    "clean": "rimraf ./dist/",
+    "lint:fix": "eslint . --ext ts --fix",
+    "prettier:fix": "prettier --write .",
+    "test": "jest"
+  },
+  "license": "MIT",
   "devDependencies": {
-    "mocha": ">=0.8.1"
+    "@types/jest": "^26.0.23",
+    "@types/node": "^14.6.1",
+    "@typescript-eslint/eslint-plugin": "^4.26.1",
+    "@typescript-eslint/parser": "^4.26.1",
+    "eslint": "^7.28.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.0.4",
+    "prettier": "^2.3.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.2"
   },
   "engines": {
     "node": ">=0.8.0"
   },
-  "main": "./lib/naive_bayes",
+  "main": "./dist/naive.bayes.js",
+  "types": "./dist/naive.bayes.d.ts",
   "repository": {
     "type": "git",
-    "url": "http://github.com/ttezel/bayes.git"
-  },
-  "scripts": {
-    "test": "mocha -t 30000 -R spec"
+    "url": "http://github.com/thomaschampagne/naive-bayes.git"
   }
 }
