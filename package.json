@@ -1,5 +1,5 @@
 {
-  "name": "naive-bayes",
+  "name": "@thomaschampagne/naive-bayes",
   "description": "TypeScript Naive Bayes Classifier for Node and Browser",
   "version": "1.0.0",
   "author": "Thomas Champagne",
