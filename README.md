@@ -1,7 +1,6 @@
-# TypeScript Naive Bayes Classifier for Node and browser
+# TypeScript Naive Bayes Classifier for Node and Browser
 
-This `naive-bayes` library is a typescript "re-industrialized" and synchronous version of
-the [bayes](https://www.npmjs.com/package/bayes) library.
+This "Naive Bayes Classifier" library is based on the [bayes](https://www.npmjs.com/package/bayes) package. Library has been re-implemented as synchronous, refactored and cleaned under TypeScript, Jest, ESLint and Prettier.
 
 ## What can I use this for?
 
