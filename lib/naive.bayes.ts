@@ -189,6 +189,50 @@ export class NaiveBayes {
     return chosenCategory;
   }
 
+
+  /**
+   * Determine what categories `text` belongs to.
+   *
+   * @param  {String} text
+   * @return {Promise<string>} category
+   */
+  public probabilities(text: string): any {
+    var tokens = this.tokenizer(text)
+    var frequencyTable = this.frequencyTable(tokens)
+  
+    //iterate thru our categories to calculate the probability for this text
+    return Object
+    .keys(this.categories)
+    .map((category) => {
+  
+      //start by calculating the overall probability of this category
+      //=>  out of all documents we've ever looked at, how many were
+      //    mapped to this category
+      var categoryProbability = this.docCount[category] / this.totalDocuments
+  
+      //take the log to avoid underflow
+      var logProbability = Math.log(categoryProbability)
+  
+      //now determine P( w | c ) for each word `w` in the text
+      Object
+      .keys(frequencyTable)
+      .forEach((token) => {
+        var frequencyInText = frequencyTable[token]
+        var tokenProbability = this.tokenProbability(token, category)
+  
+        // console.log('token: %s category: `%s` tokenProbability: %d', token, category, tokenProbability)
+  
+        //determine the log of the P( w | c ) for this word
+        logProbability += frequencyInText * Math.log(tokenProbability)
+      })
+  
+      return {
+        category: category,
+        value: logProbability
+      }
+    })
+  }
+
   /**
    * Build a frequency hashmap where
    * - the keys are the entries in `tokens`
