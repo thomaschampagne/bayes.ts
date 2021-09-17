@@ -155,37 +155,16 @@ export class NaiveBayes {
     let maxProbability = -Infinity;
     let chosenCategory: string | null = null;
 
-    const tokens: string[] = this.tokenizer(text);
-    const frequencyTable = this.frequencyTable(tokens);
+    var probabilities = this.probabilities(text)
 
-    // Iterate thru our categories to find the one with max probability for this text
-    Object.keys(this.categories).forEach(category => {
-      // Start by calculating the overall probability of this category
-      // =>  out of all documents we've ever looked at, how many were
-      //    mapped to this category
-      const categoryProbability = this.docCount[category] / this.totalDocuments;
-
-      // Take the log to avoid underflow
-      let logProbability = Math.log(categoryProbability);
-
-      // Now determine P( w | c ) for each word `w` in the text
-      Object
-        .keys(frequencyTable)
-        .forEach(token => {
-          const frequencyInText = frequencyTable[token];
-          const tokenProbability = this.tokenProbability(token, category);
-
-          // console.log('token: %s category: `%s` tokenProbability: %d', token, category, tokenProbability)
-          // Determine the log of the P( w | c ) for this word
-          logProbability += frequencyInText * Math.log(tokenProbability);
-        });
-
-      if (logProbability > maxProbability) {
-        maxProbability = logProbability;
-        chosenCategory = category;
-      }
-    });
-
+    //iterate thru our categories to find the one with max probability for this text
+    probabilities.forEach((categoryProbability: any) => {
+        if (categoryProbability.value > maxProbability) {
+          maxProbability = categoryProbability.value
+          chosenCategory = categoryProbability.category
+        }
+      })
+  
     return chosenCategory;
   }
 
@@ -197,35 +176,29 @@ export class NaiveBayes {
    * @return {Promise<string>} category
    */
   public probabilities(text: string): any {
-    var tokens = this.tokenizer(text)
-    var frequencyTable = this.frequencyTable(tokens)
-  
-    //iterate thru our categories to calculate the probability for this text
-    return Object
-    .keys(this.categories)
-    .map((category) => {
-  
-      //start by calculating the overall probability of this category
-      //=>  out of all documents we've ever looked at, how many were
+    const tokens: string[] = this.tokenizer(text);
+    const frequencyTable = this.frequencyTable(tokens);
+
+    // Iterate thru our categories to find the one with max probability for this text
+    return Object.keys(this.categories).map(category => {
+      // Start by calculating the overall probability of this category
+      // =>  out of all documents we've ever looked at, how many were
       //    mapped to this category
-      var categoryProbability = this.docCount[category] / this.totalDocuments
-  
-      //take the log to avoid underflow
-      var logProbability = Math.log(categoryProbability)
-  
-      //now determine P( w | c ) for each word `w` in the text
-      Object
-      .keys(frequencyTable)
-      .forEach((token) => {
-        var frequencyInText = frequencyTable[token]
-        var tokenProbability = this.tokenProbability(token, category)
-  
+      const categoryProbability = this.docCount[category] / this.totalDocuments;
+
+      // Take the log to avoid underflow
+      let logProbability = Math.log(categoryProbability);
+
+      // Now determine P( w | c ) for each word `w` in the text
+      Object.keys(frequencyTable).forEach(token => {
+        const frequencyInText = frequencyTable[token];
+        const tokenProbability = this.tokenProbability(token, category);
+
         // console.log('token: %s category: `%s` tokenProbability: %d', token, category, tokenProbability)
-  
-        //determine the log of the P( w | c ) for this word
-        logProbability += frequencyInText * Math.log(tokenProbability)
-      })
-  
+        // Determine the log of the P( w | c ) for this word
+        logProbability += frequencyInText * Math.log(tokenProbability);
+      });
+
       return {
         category: category,
         value: logProbability
