@@ -155,11 +155,32 @@ export class NaiveBayes {
     let maxProbability = -Infinity;
     let chosenCategory: string | null = null;
 
+    var probabilities = this.probabilities(text)
+
+    //iterate thru our categories to find the one with max probability for this text
+    probabilities.forEach((categoryProbability: any) => {
+        if (categoryProbability.value > maxProbability) {
+          maxProbability = categoryProbability.value
+          chosenCategory = categoryProbability.category
+        }
+      })
+  
+    return chosenCategory;
+  }
+
+
+  /**
+   * Determine what categories `text` belongs to.
+   *
+   * @param  {String} text
+   * @return {Promise<string>} category
+   */
+  public probabilities(text: string): any {
     const tokens: string[] = this.tokenizer(text);
     const frequencyTable = this.frequencyTable(tokens);
 
     // Iterate thru our categories to find the one with max probability for this text
-    Object.keys(this.categories).forEach(category => {
+    return Object.keys(this.categories).map(category => {
       // Start by calculating the overall probability of this category
       // =>  out of all documents we've ever looked at, how many were
       //    mapped to this category
@@ -169,24 +190,20 @@ export class NaiveBayes {
       let logProbability = Math.log(categoryProbability);
 
       // Now determine P( w | c ) for each word `w` in the text
-      Object
-        .keys(frequencyTable)
-        .forEach(token => {
-          const frequencyInText = frequencyTable[token];
-          const tokenProbability = this.tokenProbability(token, category);
+      Object.keys(frequencyTable).forEach(token => {
+        const frequencyInText = frequencyTable[token];
+        const tokenProbability = this.tokenProbability(token, category);
 
-          // console.log('token: %s category: `%s` tokenProbability: %d', token, category, tokenProbability)
-          // Determine the log of the P( w | c ) for this word
-          logProbability += frequencyInText * Math.log(tokenProbability);
-        });
+        // console.log('token: %s category: `%s` tokenProbability: %d', token, category, tokenProbability)
+        // Determine the log of the P( w | c ) for this word
+        logProbability += frequencyInText * Math.log(tokenProbability);
+      });
 
-      if (logProbability > maxProbability) {
-        maxProbability = logProbability;
-        chosenCategory = category;
+      return {
+        category: category,
+        value: logProbability
       }
-    });
-
-    return chosenCategory;
+    })
   }
 
   /**

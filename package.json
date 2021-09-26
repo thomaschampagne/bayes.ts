@@ -12,6 +12,8 @@
     "artificial intelligence"
   ],
   "scripts": {
+    "prepare": "npm run build",
+    "install": "npm run build",
     "build": "npm run clean && tsc --project tsconfig.lib.json",
     "watch": "npm run build -- --watch",
     "clean": "rimraf ./dist/",
